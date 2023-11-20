@@ -11,14 +11,17 @@ object OOBasics extends App {
   println(second_person.age)
 
   val writer1 = new Writer("William", "Shakespeare", 1564)
+  val imposter = new Writer("William", "Shakespeare", 1564)
   writer1.fullName()
 
-  val novel1 = new Novel("Romeo and Juliet", 1597)
-  val novel1copy = new Novel("Romeo and Juliet", 1650)
+  val novel1 = new Novel("Romeo and Juliet", 1597, writer1)
+  val novel1copy = new Novel("Romeo and Juliet", 1650, writer1)
 
   println(novel1.authorAge(writer1))
   novel1.isWrittenBy(writer1)
-  novel1.copy()
+  novel1.copy(1650)
+  println(novel1.authorCheck(writer1))
+  println(novel1.authorCheck(imposter)) // false as author was passed as a parameter for novel1
 
   val counter = new Counter(3)
   counter.accumulator(integer = 3)
@@ -69,14 +72,14 @@ class Person (name: String, val age: Int = 0) {
 
    */
 
-  class Writer(val name: String, surname: String, val yearOfBirth: Int) {
+  class Writer(val name: String, val surname: String, val yearOfBirth: Int) {
     def fullName() : String = {
       name + " " + surname
     }
 
   }
 
-  class Novel(name: String, yearOfRelease: Int) {
+  class Novel(name: String, yearOfRelease: Int, author: Writer) {
     def authorAge(writer: Writer): Int = {
       yearOfRelease - writer.yearOfBirth
     }
@@ -86,10 +89,11 @@ class Person (name: String, val age: Int = 0) {
       println(s"The novel $name is written by $fullname")
     }
 
-    def copy() = {
-      val yearOfRelease = 1650
-      println(yearOfRelease)
+    def authorCheck(author: Writer) = {
+      author == this.author
     }
+
+    def copy(newYear: Int) : Novel = new Novel (name, newYear, author)
 
   }
 
@@ -108,6 +112,10 @@ class Counter(integer : Int) {
   def decrementCounter(integer: Int) = {
     accumulator(integer - 1)
   }
+
+  def inc(n: Int) = new Counter (integer + n)
+  def dec(n: Int) = new Counter(integer - n)
+
 
 
 }
