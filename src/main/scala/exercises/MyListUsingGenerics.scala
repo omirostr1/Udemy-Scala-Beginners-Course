@@ -28,7 +28,7 @@ abstract class MyListUsingGenerics[+A] {
 
 }
 
-object Empty1 extends MyListUsingGenerics[Nothing] {
+case object Empty1 extends MyListUsingGenerics[Nothing] {
 
   def head: Nothing = throw new NoSuchElementException
   def tail: MyListUsingGenerics[Nothing] = throw new NoSuchElementException
@@ -44,7 +44,7 @@ object Empty1 extends MyListUsingGenerics[Nothing] {
 
 }
 
-class NonEmpty1[+A](h: A, t: MyListUsingGenerics[A]) extends MyListUsingGenerics[A] {
+case class NonEmpty1[+A](h: A, t: MyListUsingGenerics[A]) extends MyListUsingGenerics[A] {
 
   def head: A = h
   def tail: MyListUsingGenerics[A] = t
@@ -101,6 +101,7 @@ class NonEmpty1[+A](h: A, t: MyListUsingGenerics[A]) extends MyListUsingGenerics
 object ListTest1 extends App {
 
   val listOfIntegers: MyListUsingGenerics[Int] = new NonEmpty1(1, new NonEmpty1(2, new NonEmpty1(3, Empty1)))
+  val cloneListOfIntegers: MyListUsingGenerics[Int] = new NonEmpty1(1, new NonEmpty1(2, new NonEmpty1(3, Empty1)))
   val anotherListOfIntegers: MyListUsingGenerics[Int] = new NonEmpty1(4, new NonEmpty1(5, Empty1))
   val listOfStrings: MyListUsingGenerics[String] = new NonEmpty1("Hello", new NonEmpty1("Scala", Empty1))
 
@@ -118,6 +119,8 @@ object ListTest1 extends App {
   println(listOfIntegers.flatMap(new MyTransformer[Int, MyListUsingGenerics[Int]] {
     override def transform(transformable: Int) : MyListUsingGenerics[Int] = new NonEmpty1(transformable, new NonEmpty1(transformable + 1, Empty1))
   }).toString)
+
+  println(listOfIntegers == cloneListOfIntegers)
 
 }
 

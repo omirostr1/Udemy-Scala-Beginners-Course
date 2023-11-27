@@ -48,6 +48,7 @@ object Generics extends App{
 
   // bounded types
   class Cage[A <: Animal](Animal: A) // this reads as: class named Cage accepts parameter of type A which is a subtype of Animal class
+  // upper bounded type in Animal class (opposite sign is the lower bounded)
   val cage = new Cage (new Dog)
 
   class Car
