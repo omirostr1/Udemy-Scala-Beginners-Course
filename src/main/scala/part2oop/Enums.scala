@@ -18,16 +18,16 @@ object Enums extends App{
   val somePermissions: Permissions.Value = Permissions.read
 
   // constructor args
-  class PermissionsWithBits(bits: Int) extends Enumeration {
-//    val read extends PermissionsWithBits(4)
-//    val write = Value("WRITE", 2)
-//    val execute = Value("EXECUTE", 1)
-//    val none = Value("NONE", 0)
-  }
-
+//  class PermissionsWithBits(bits: Int) extends Enumeration {
+//    val read extends PermissionsWithBits(4) //100
+//    val write = Value("WRITE", 2) //010
+//    val execute = Value("EXECUTE", 1) //001
+//    val none = Value("NONE", 0) //000
+//  }
+//
 //  object PermissionsWithBits {
 //    def fromBits(bits: Int): PermissionsWithBits = //whatever
-//      PermissionsWithBits.NONE
+//      PermissionsWithBits.none
 //  }
 //
 //  // standard API
