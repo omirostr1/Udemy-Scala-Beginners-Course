@@ -19,6 +19,7 @@ abstract class MyListUsingGenerics[+A] {
   def printElements : String
   override def toString: String = "[" + printElements + "]"
 
+  // higher-order functions
   def map[B](transformer: MyTransformer[A, B]) : MyListUsingGenerics[B]
   def filter(predicate: MyPredicate[A]) : MyListUsingGenerics[A]
   def flatMap[B](transformer: MyTransformer[A, MyListUsingGenerics[B]]): MyListUsingGenerics[B]
@@ -131,6 +132,7 @@ trait MyPredicate[-T] {
 trait MyTransformer[-A, B] {
   def transform(transformable: A): B
 }
+
 
 /*
 
