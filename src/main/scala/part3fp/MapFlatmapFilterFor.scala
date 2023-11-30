@@ -23,4 +23,9 @@ object MapFlatmapFilterFor extends App{
   val chars = List("a", "b", "c", "d")
   // List("a1", "a2", "a3", ... , "d3", "d4")
 
+  val combo = (x: String) => List(x + numbers(0).toString, x + numbers(1).toString, x + numbers(2).toString, x + numbers(3).toString)
+  println(chars.flatMap(combo))
+
+  // or val combinations = numbers.flatMap(n => chars.map(c => "" + c + n))
+
 }
