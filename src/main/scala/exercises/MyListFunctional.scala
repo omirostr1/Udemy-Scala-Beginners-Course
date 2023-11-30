@@ -26,6 +26,14 @@ abstract class MyListFunctional[+A] {
   //concatenation
   def ++[B >: A](list: MyListFunctional[B]): MyListFunctional[B]
 
+  //hofs
+  def foreach(f: A => Unit) : Unit
+  def sort(compare: (A, A) => Int) : MyListFunctional[A]
+
+  def zipWith[B, C](list: MyListFunctional[B], g: (A, B) => C) : MyListFunctional[C]
+
+  def fold[B](start: B)(function: (A, B) => B ) : B
+
 }
 
 case object Empty2 extends MyListFunctional[Nothing] {
@@ -41,6 +49,17 @@ case object Empty2 extends MyListFunctional[Nothing] {
   def flatMap[B](transformer: Nothing => MyListFunctional[B]): MyListFunctional[B] = Empty2
 
   def ++[B >: Nothing] (list: MyListFunctional[B]) : MyListFunctional[B] = list
+
+  def foreach(f: Nothing => Unit): Unit = ()
+
+  def sort(compare: (Nothing, Nothing) => Int): MyListFunctional[Nothing] = Empty2
+
+  def zipWith[B, C](list: MyListFunctional[B], g: (Nothing, B) => C) : MyListFunctional[C] = {
+    if (!list.isEmpty) throw new RuntimeException("Lists do not have the same length")
+    else Empty2
+  }
+
+  def fold[B](start: B)(function: (Nothing, B) => B ) : B = start
 
 }
 
@@ -97,6 +116,44 @@ case class NonEmpty2[+A](h: A, t: MyListFunctional[A]) extends MyListFunctional[
 
   def ++[B >: A] (list: MyListFunctional[B]) : MyListFunctional[B] = new NonEmpty2(h, t ++ list)
 
+  def foreach(f: A => Unit): Unit = {
+    f(h)
+    t.foreach(f)
+  }
+
+  def sort(compare: (A,A) => Int) : MyListFunctional[A] = {
+    def insert(x: A, sortedList: MyListFunctional[A]): MyListFunctional[A] = {
+      if (sortedList.isEmpty) new NonEmpty2(x, Empty2)
+      else if (compare(x, sortedList.head) <= 0) new NonEmpty2(x, sortedList)
+      else new NonEmpty2(sortedList.head, insert(x, sortedList.tail))
+    }
+    val sortedTail = t.sort(compare)
+    insert (h, sortedTail)
+  }
+
+  def zipWith[B, C](list: MyListFunctional[B], g: (A, B) => C) : MyListFunctional[C] = {
+    if (list.isEmpty) {
+      throw new RuntimeException("Lists do not have the same length")
+    }
+    else {
+      new NonEmpty2(g(h,list.head), t.zipWith(list.tail, g))
+
+    }
+  }
+
+  /*
+    [1,2,3].fold(0) (+) =
+    = [2,3].fold(1) (+) =
+    = [3].fold(3) (+) =
+    = [].fold(6) (+) =
+    = 6
+   */
+
+  def fold[B](start: B)(function: (A, B) => B ) : B = {
+    t.fold(function(h, start))(function)
+  }
+
+
 }
 object ListTest2 extends App {
 
@@ -127,5 +184,11 @@ object ListTest2 extends App {
   // or println(listOfIntegers.flatMap(transformable => new NonEmpty2(transformable, new NonEmpty2(transformable + 1, Empty2))}).toString)
 
   println(listOfIntegers == cloneListOfIntegers)
+
+    listOfIntegers.foreach(x => println(x))
+
+  println(listOfIntegers.sort((x, y) => y - x))
+  println(anotherListOfIntegers.zipWith[String, String](listOfStrings, _ + "-" + _))
+  println(listOfIntegers.fold(0) (_ + _))
 
 }
