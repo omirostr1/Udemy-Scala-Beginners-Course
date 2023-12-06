@@ -1,5 +1,9 @@
 package part4pm
 
+import exercises.MyListFunctional
+import exercises.Empty2
+import exercises.NonEmpty2
+
 object AllThePatterns extends App{
 
   // 1 - constants
@@ -35,6 +39,16 @@ object AllThePatterns extends App{
     case (_, (2, v)) =>
   }
 
-  // PM can be nested
+  // PM can be NESTED!
+
+  // 4 - case classes - constructor pattern
+  // PMs can be nested with case classes as well
+  val aList: MyListFunctional[Int] = NonEmpty2(1, NonEmpty2(2, Empty2))
+  val matchAList = aList match {
+    case Empty2 =>
+    case NonEmpty2(subhead, subtail) =>
+  }
+
+  // 5 - List patterns
 
 }
